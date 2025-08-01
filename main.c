@@ -7,10 +7,10 @@ typedef struct {
 } Wikitext;
 
 Wikitext read_file();
-void write_from_line(int line);
+void write_from_line(int line, Wikitext* wikitext, int breadth, int length);
 
 int main() {
-	int row, col;
+	int breadth, length;
 	char ch;
 
 	initscr();
@@ -18,19 +18,20 @@ int main() {
 	//keypad(stdscr, TRUE);
 	cbreak();
 
-	getmaxyx(stdscr, row, col);
+	getmaxyx(stdscr, length, breadth);
 
-	mvprintw(row/2+1,col/2,"Hello, world!");	
+	//mvprintw(length/2+1,breadth/2,"Hello, world!");	
 
 	Wikitext test_file = read_file();
 
 	if (test_file.content != NULL) {
-		mvprintw(0, 0, "%s", test_file.content);
+		write_from_line(0, &test_file, breadth, length);
 	}
 
 	char* p = test_file.content;
 	int y = 0;
 	int not_exiting = 1;
+	int current_start = 0;
 	while (not_exiting) {
 		ch = getch();
 		switch(ch) {
@@ -38,12 +39,16 @@ int main() {
 				not_exiting = 0;
 				break;
 			case 'n':
-				while (*p != '\n')
+				while (*p != '\n' && *p != '\0')
 					p++;
 				p++;
+				if (y > length) 
+					write_from_line(current_start++, &test_file, breadth, length); 
 				y++;
 				break;
 			case 'e':
+				if (y == 0)
+					break;
 				p--;
 				while (*p != '\n')
 					p--;
@@ -59,8 +64,8 @@ int main() {
 		if (ch == 'i') p++;
 		if (ch == 'm') p--;
 		*/
-		mvprintw(row/2-1,0, "%p",p);
-		mvprintw(row/2,0, "%c",*p);
+		//mvprintw(length/2-1,0, "%p",p);
+		//mvprintw(length/2,0, "%c",*p);
 		move(y,0);
 
 	}
@@ -102,4 +107,38 @@ Wikitext read_file() {
 
 	return file_content;
 
+}
+
+void write_from_line(int line, Wikitext* wikitext, int breadth, int length) {
+	char *p = wikitext->content;
+	for (int i = 0; i < line; i++) {
+		p++;
+		while (*p != '\n')
+			p++;
+	}
+
+	int x = 0;
+	int y = 0;
+
+	while (*p != '\0' && y < length) {
+		if (x > breadth) {
+			y++;
+			x = 0;
+			p--; //p shouldn't increment later
+		}
+		if (*p == '\n') {
+			mvprintw(y, x, "\n");
+			//p++;
+			y++;
+			x = -1;
+		} else {
+			mvprintw(y, x, "%c", *p);
+		}
+		if (*p == '\0')
+			break;
+		if (y >= length)
+			break;
+		p++;
+		x++;
+	}
 }
