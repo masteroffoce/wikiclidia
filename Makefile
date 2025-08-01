@@ -5,10 +5,14 @@ LDFLAGS = -lncurses
 SRC = main.c
 EXEC = run
 
-all: $(EXEC)
+#all: $(EXEC)
+.PHONY: all
+all:
 
 $(EXEC): $(SRC)
 	$(CC) $(CFLAGS) -o $(EXEC) $(SRC) $(LDFLAGS)
 
+.PHONY: test
 
-.PHONY: all
+test: $(EXEC)
+	./$(EXEC)
