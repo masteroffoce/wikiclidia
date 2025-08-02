@@ -144,11 +144,17 @@ void write_from_line(int line, Wikitext* wikitext, int breadth, int length) {
 
 void newline(char** p, int breadth) {
 	for (int i = 0; i < breadth; i++) {
-		(*p)++;
+		
 		if (**p == '\n') {
 			(*p)++;
 			break;
 		}
+		(*p)++;
+		
 	}
-	mvprintw(0,0,"//%p//",p);
+	mvprintw(0,0,"          ");
+	if (**p == '\n')
+		mvprintw(0,0,"\\n");
+	else
+		mvprintw(0,0,"//%c//",**p);
 }
