@@ -35,7 +35,7 @@ int main() {
 	int y = 0;
 	int not_exiting = 1;
 	int current_start = 0;
-	//int chars_traversed = 0;
+	move(0,0);
 	while (not_exiting) {
 		ch = getch();
 		switch(ch) {
@@ -46,7 +46,7 @@ int main() {
 				newline(&p, breadth);
 				y++;
 				//write_from_line(current_start++, &test_file, breadth, length);
-				if (y > length - MARGIN) {
+				if (y > length - 1 - MARGIN) {
 					write_from_line(current_start++, &test_file, breadth, length);
 					y = length - 1;
 				}
@@ -57,7 +57,6 @@ int main() {
 				break;
 			default:
 		}
-		printf(" %d ",y);
 		move(y,0);
 
 	}
@@ -145,9 +144,11 @@ void newline(char** p, int breadth) {
 		(*p)++;
 		
 	}
+	/*
 	mvprintw(0,0,"          ");
 	if (**p == '\n')
 		mvprintw(0,0,"\\n");
 	else
 		mvprintw(0,0,"//%c//",**p);
+	*/
 }
