@@ -8,6 +8,7 @@ typedef struct {
 
 Wikitext read_file();
 void write_from_line(int line, Wikitext* wikitext, int breadth, int length);
+void newline(char** p, int breadth);
 
 int main() {
 	int breadth, length;
@@ -40,23 +41,10 @@ int main() {
 				not_exiting = 0;
 				break;
 			case 'n':
-				/*while (*p != '\n' && *p != '\0') {
-					p++;
-				p++;
-				if (y >= length)
-					write_from_line(current_start++, &test_file, breadth, length); 
-				else
-					y++;
-				break;
-				*/
-				for (int i = 0; i < breadth; i++) {
-					p++;
-					if (*p == '\n')
-						break;
-				}
+				newline(&p, breadth);
 				y++;
 				//write_from_line(current_start++, &test_file, breadth, length);
-				if (y > length) {
+				if (y > length - 3) {
 					write_from_line(current_start++, &test_file, breadth, length);
 					y = length;
 				}
@@ -123,11 +111,7 @@ Wikitext read_file() {
 void write_from_line(int line, Wikitext* wikitext, int breadth, int length) {
 	char *p = wikitext->content;
 	for (int i = 0; i < line; i++) {
-		for (int j = 0; j < breadth; j++) {
-			p++;
-			if (*p == '\n')
-				break;
-		}
+		newline(&p, breadth);
 	}
 
 	int x = 0;
@@ -156,4 +140,15 @@ void write_from_line(int line, Wikitext* wikitext, int breadth, int length) {
 	}
 	//mvprintw(0,0,"%d",line);
 	//mvprintw(1,0,"%d",y);
+}
+
+void newline(char** p, int breadth) {
+	for (int i = 0; i < breadth; i++) {
+		(*p)++;
+		if (**p == '\n') {
+			(*p)++;
+			break;
+		}
+	}
+	mvprintw(0,0,"//%p//",p);
 }
