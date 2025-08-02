@@ -32,6 +32,7 @@ int main() {
 	int y = 0;
 	int not_exiting = 1;
 	int current_start = 0;
+	//int chars_traversed = 0;
 	while (not_exiting) {
 		ch = getch();
 		switch(ch) {
@@ -39,20 +40,30 @@ int main() {
 				not_exiting = 0;
 				break;
 			case 'n':
-				while (*p != '\n' && *p != '\0')
+				/*while (*p != '\n' && *p != '\0') {
 					p++;
 				p++;
-				if (y > length) 
+				if (y >= length)
 					write_from_line(current_start++, &test_file, breadth, length); 
-				y++;
+				else
+					y++;
 				break;
-			case 'e':
-				if (y == 0)
-					break;
-				p--;
-				while (*p != '\n')
-					p--;
-				y--;
+				*/
+				for (int i = 0; i < breadth; i++) {
+					p++;
+					if (*p == '\n')
+						break;
+				}
+				y++;
+				//write_from_line(current_start++, &test_file, breadth, length);
+				if (y > length) {
+					write_from_line(current_start++, &test_file, breadth, length);
+					y = length;
+				}
+				//mvprintw(0,0,"%d",y);
+				break;
+			case 'r':
+				write_from_line(14, &test_file, breadth, length);
 				break;
 			default:
 		}
@@ -112,9 +123,11 @@ Wikitext read_file() {
 void write_from_line(int line, Wikitext* wikitext, int breadth, int length) {
 	char *p = wikitext->content;
 	for (int i = 0; i < line; i++) {
-		p++;
-		while (*p != '\n')
+		for (int j = 0; j < breadth; j++) {
 			p++;
+			if (*p == '\n')
+				break;
+		}
 	}
 
 	int x = 0;
@@ -141,4 +154,6 @@ void write_from_line(int line, Wikitext* wikitext, int breadth, int length) {
 		p++;
 		x++;
 	}
+	//mvprintw(0,0,"%d",line);
+	//mvprintw(1,0,"%d",y);
 }
