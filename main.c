@@ -1,6 +1,8 @@
 #include <ncurses.h>
 #include <stdlib.h>
 
+#define MARGIN 3
+
 typedef struct {
 	char* content;
 	size_t size;
@@ -44,9 +46,9 @@ int main() {
 				newline(&p, breadth);
 				y++;
 				//write_from_line(current_start++, &test_file, breadth, length);
-				if (y > length - 3) {
+				if (y > length - MARGIN) {
 					write_from_line(current_start++, &test_file, breadth, length);
-					y = length;
+					y = length - 1;
 				}
 				//mvprintw(0,0,"%d",y);
 				break;
@@ -55,16 +57,7 @@ int main() {
 				break;
 			default:
 		}
-
-		/*
-		if (ch == 'f') break;
-		if (ch == 'n') p += col;
-		if (ch == 'e') p -= col;
-		if (ch == 'i') p++;
-		if (ch == 'm') p--;
-		*/
-		//mvprintw(length/2-1,0, "%p",p);
-		//mvprintw(length/2,0, "%c",*p);
+		printf(" %d ",y);
 		move(y,0);
 
 	}
