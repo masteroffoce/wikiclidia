@@ -9,7 +9,7 @@ typedef struct {
 } Wikitext;
 
 Wikitext read_file();
-void write_from_line(int line, Wikitext* wikitext, int breadth, int length);
+void write_from_line(int line, Wikitext* wikitext, int breadth, int length, WINDOW** file_win);
 void newline(char** p, int breadth);
 
 int main() {
@@ -27,14 +27,20 @@ int main() {
 
 	Wikitext test_file = read_file();
 
+	refresh();
+	WINDOW *file_win = newwin(length - 2, breadth, 1, 0);
+	box(file_win, 0, 0);
+	wrefresh(file_win);
+
 	if (test_file.content != NULL) {
-		write_from_line(0, &test_file, breadth, length);
+		write_from_line(0, &test_file, breadth, length, &file_win);
 	}
+	wrefresh(file_win);
 
 	char* p = test_file.content;
-	int y = 0;
-	int not_exiting = 1;
-	int current_start = 0;
+	int y = 0; //Current y coordinate of cursor
+	int not_exiting = 1; //Set to 0 when program exits
+	int current_start = 0; //Curent first line on screen
 	move(0,0);
 	while (not_exiting) {
 		ch = getch();
@@ -46,14 +52,14 @@ int main() {
 				newline(&p, breadth);
 				y++;
 				//write_from_line(current_start++, &test_file, breadth, length);
-				if (y > length - 1 - MARGIN) {
-					write_from_line(current_start++, &test_file, breadth, length);
-					y = length - 1;
+				if (y > length - 2) {
+					write_from_line(current_start++, &test_file, breadth, length, &file_win);
+					y = length - 2;
 				}
 				//mvprintw(0,0,"%d",y);
 				break;
 			case 'r':
-				write_from_line(14, &test_file, breadth, length);
+				write_from_line(14, &test_file, breadth, length, &file_win);
 				break;
 			default:
 		}
@@ -100,7 +106,7 @@ Wikitext read_file() {
 
 }
 
-void write_from_line(int line, Wikitext* wikitext, int breadth, int length) {
+void write_from_line(int line, Wikitext* wikitext, int breadth, int length, WINDOW** file_win) {
 	char *p = wikitext->content;
 	for (int i = 0; i < line; i++) {
 		newline(&p, breadth);
@@ -116,12 +122,12 @@ void write_from_line(int line, Wikitext* wikitext, int breadth, int length) {
 			p--; //p shouldn't increment later
 		}
 		if (*p == '\n') {
-			mvprintw(y, x, "\n");
+			mvwprintw(*file_win, y, x, "\n");
 			//p++;
 			y++;
 			x = -1;
 		} else {
-			mvprintw(y, x, "%c", *p);
+			mvwprintw(*file_win, y, x, "%c", *p);
 		}
 		if (*p == '\0')
 			break;
@@ -130,8 +136,8 @@ void write_from_line(int line, Wikitext* wikitext, int breadth, int length) {
 		p++;
 		x++;
 	}
-	//mvprintw(0,0,"%d",line);
-	//mvprintw(1,0,"%d",y);
+	wrefresh(*file_win);
+	mvprintw(0,0,"%d",line);
 }
 
 void newline(char** p, int breadth) {
