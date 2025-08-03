@@ -5,5 +5,8 @@ pkgs.mkShell {
     pkgs.gnumake
 	pkgs.ncurses
 	pkgs.gcc
+	pkgs.curl
+	pkgs.cjson
+	pkgs.libxml2
   ];
 }

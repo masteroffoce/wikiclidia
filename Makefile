@@ -1,8 +1,8 @@
 CC = gcc
 CFLAGS = -Wall -Werror
-LDFLAGS = -lncurses
+LDFLAGS = -lcurl -lcjson -lxml2 #-lncurses
 
-SRC = main.c
+SRC = scrape.c
 EXEC = run
 
 #all: $(EXEC)
