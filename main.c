@@ -38,10 +38,10 @@ int main() {
 	wrefresh(file_win);
 
 	char* p = test_file.content;
-	int y = 0; //Current y coordinate of cursor
+	int y = 1; //Current y coordinate of cursor
 	int not_exiting = 1; //Set to 0 when program exits
-	int current_start = 0; //Curent first line on screen
-	move(0,0);
+	int current_start = 1; //Curent first line on screen
+	move(1,0);
 	while (not_exiting) {
 		ch = getch();
 		switch(ch) {
@@ -63,6 +63,7 @@ int main() {
 				break;
 			default:
 		}
+		mvprintw(0,0,"start:%d;y:%d;*p:%c",current_start,y,*p);
 		move(y,0);
 
 	}
@@ -137,7 +138,7 @@ void write_from_line(int line, Wikitext* wikitext, int breadth, int length, WIND
 		x++;
 	}
 	wrefresh(*file_win);
-	mvprintw(0,0,"%d",line);
+	//mvprintw(0,0,"%d",line);
 }
 
 void newline(char** p, int breadth) {
