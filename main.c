@@ -1,18 +1,24 @@
 #include <ncurses.h>
 #include <stdlib.h>
+#include "scrape.h"
+#include "parse.h"
 
-#define MARGIN 3
-
-typedef struct {
-	char* content;
-	size_t size;
-} Wikitext;
+#define MARGIN 3 //Counter: number of times I've fixed something else instead of this: 4
 
 Wikitext read_file();
+Wikitext get_content();
 void write_from_line(int line, Wikitext* wikitext, int breadth, int length, WINDOW** file_win);
 void newline(char** p, int breadth);
 
 int main() {
+	char *x = "<html><div><h1>hi</h1></div></html>";
+	html_to_text(x);
+	printf("%s",x);
+
+	Wikitext *soup = scrape();
+	//printf("%s", soup->content);
+	free(soup);
+
 	int breadth, length;
 	char ch;
 
@@ -25,7 +31,9 @@ int main() {
 
 	//mvprintw(length/2+1,breadth/2,"Hello, world!");	
 
-	Wikitext test_file = read_file();
+	//Wikitext test_file = read_file();
+	Wikitext test_file = get_content();
+	parse(&test_file);
 
 	refresh();
 	WINDOW *file_win = newwin(length - 2, breadth, 1, 0);
@@ -73,8 +81,9 @@ int main() {
 	return 0;
 }
 
+
 Wikitext read_file() {
-	FILE* file = fopen("reading.txt", "r");
+	FILE* file = fopen("thebestyoucanisgoodenough", "r");
 	if (file == NULL) exit(1);
 
 	fseek(file, 0, SEEK_END);
@@ -105,6 +114,11 @@ Wikitext read_file() {
 
 	return file_content;
 
+}
+
+Wikitext get_content() {
+	Wikitext *content = scrape();
+	return *content;
 }
 
 void write_from_line(int line, Wikitext* wikitext, int breadth, int length, WINDOW** file_win) {

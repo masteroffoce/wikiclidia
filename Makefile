@@ -1,18 +1,30 @@
 CC = gcc
-CFLAGS = -Wall -Werror
-LDFLAGS = -lcurl -lcjson -lxml2 #-lncurses
+PKG_CONFIG = pkg-config
 
-SRC = scrape.c
+SRC = main.c scrape.c parse.c scrape.h parse.h
+OBJ = $(SRC:.c=.o)
 EXEC = run
 
-#all: $(EXEC)
-.PHONY: all
-all:
+CFLAGS = -Wall -Werror $(shell $(PKG_CONFIG) --cflags libxml-2.0)
+LDFLAGS = $(shell $(PKG_CONFIG) --libs libxml-2.0) -lcurl -lcjson  -lncurses
 
-$(EXEC): $(SRC)
-	$(CC) $(CFLAGS) -o $(EXEC) $(SRC) $(LDFLAGS)
+.PHONY: all clean test
+	
+all: $(EXEC)
 
-.PHONY: test
+$(EXEC): $(OBJ)
+	$(CC) $(OBJ) -o $@ $(LDFLAGS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 test: $(EXEC)
+	@echo -------------
+	@echo ''
 	./$(EXEC)
+	@echo ''
+	@echo ''
+	@echo -------------
+
+clean:
+	rm -f $(OBJ) $(EXEC)

@@ -7,6 +7,7 @@ pkgs.mkShell {
 	pkgs.gcc
 	pkgs.curl
 	pkgs.cjson
-	pkgs.libxml2
+	pkgs.libxml2.dev
+	pkgs.pkg-config
   ];
 }
